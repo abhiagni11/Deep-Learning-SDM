@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-""" Robot Module
+""" Testing Module
 
-This module initializes the robot class
+This module tests all the submodule and calls the visualizer
 
 Author: Abhijeet Agnihotri
 """
