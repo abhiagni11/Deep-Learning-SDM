@@ -4,5 +4,6 @@ As part of Sequential Decision Making course, this class project aims to leverag
 To run this:
 
 `git clone this repository`
+
 `python3 testing.py`
 
