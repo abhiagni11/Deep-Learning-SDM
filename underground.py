@@ -14,7 +14,7 @@ class Underground:
 
 	def __init__(self, tunnel_filename, artifact_filename):
 		self._tunnel_map = np.load(tunnel_filename)
-		self._artifact_locations = np.load(artifact_filename)
+		self._artifact_locations = [(x[0], x[1]) for x in np.load(artifact_filename).tolist()]
 		self._y_dim, self._x_dim = self._tunnel_map.shape
 		self._action_dict = {"none": 0, "up": 1, "right": 2, "down": 3, "left": 4}
 		self._action_coords = [(0, 0), (0, -1), (1, 0), (0, 1), (-1, 0)]
@@ -33,7 +33,7 @@ class Underground:
 		return allowed_actions
 
 	def _found_artifact(self, state):
-		if state in self._artifact_locations:
+		if self._artifact_locations.count(state):
 			return True
 		else:
 			return False
