@@ -20,14 +20,14 @@ ARTIFACT_FILE = './maps/artifacts.npy'
 if __name__ == "__main__":
 	# Instantiate the environment
 	tunnel = Underground(TUNNEL_FILE, ARTIFACT_FILE)
-	x_dim, y_dim = tunnel._x_dim, tunnel._y_dim
+	y_dim, x_dim = tunnel._y_dim, tunnel._x_dim
 	# Introduce a robot, only one for now
-	wall_e = Robot(x_dim, y_dim)
+	wall_e = Robot(y_dim, x_dim)
 	# To visualize
 	graph = Visualize(TUNNEL_FILE, ARTIFACT_FILE)
 	graph._initialise_visualization()
 
-	for i in range(20):
+	for i in range(100):
 		state = wall_e._get_current_location()
 		graph._keep_visualizing(state)
 		wall_e._update_reward(tunnel._found_artifact(state))

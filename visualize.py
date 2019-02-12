@@ -17,7 +17,7 @@ class Visualize:
 	def __init__(self, tunnel_filename, artifact_filename):
 		self._tunnel_map = np.load(tunnel_filename)
 		self._artifact_locations = np.load(artifact_filename)
-		self._x_dim, self._y_dim = self._tunnel_map.shape
+		self._y_dim, self._x_dim = self._tunnel_map.shape
 		self.fig, self.ax = plt.subplots()
 
 	def _initialise_visualization(self):
@@ -30,10 +30,10 @@ class Visualize:
 		# TODO: Adapt for multiple robots
 		plt.cla()
 		plt.imshow(self._tunnel_map, cmap=plt.get_cmap('bone'))
-		rect = patches.Rectangle(robot_states, 1, 1, linewidth=0, edgecolor='r', facecolor='r')
+		rect = patches.Rectangle((robot_states[0] - 0.5, robot_states[1] - 0.5), 1, 1, linewidth=1, edgecolor='r', facecolor='r')
 		self.ax.add_patch(rect)
 		for artifact in self._artifact_locations:
-			rect = patches.Rectangle(artifact, 1, 1, linewidth=0, edgecolor='b', facecolor='b')
+			rect = patches.Rectangle((artifact[0] - 0.5, artifact[1] - 0.5), 1, 1, linewidth=1, edgecolor='b', facecolor='none')
 			self.ax.add_patch(rect)
 		self.ax.plot()
 		# plt.tick_params(axis='both', which='both', bottom=False, top=False, labelbottom=False, right=False, left=False, labelleft=False)

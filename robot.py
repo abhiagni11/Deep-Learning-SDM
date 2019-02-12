@@ -12,15 +12,15 @@ import numpy as np
 
 class Robot:
 
-	def __init__(self, x_dim, y_dim):
-		self._x_dim = x_dim
+	def __init__(self, y_dim, x_dim):
 		self._y_dim = y_dim
-		self._tunnel_grid = np.zeros((self._x_dim, self._y_dim))
+		self._x_dim = x_dim
+		self._tunnel_grid = np.zeros((self._y_dim, self._x_dim))
 		# Definition of entry point can be changed subject to map generation
-		self._entry_point = [0, int(self._y_dim/2)]
+		self._entry_point = [int(self._y_dim/2), 0]
 		self._current_position = self._entry_point
 		self._action_dict = {"none": 0, "up": 1, "right": 2, "down": 3, "left": 4}
-		self._action_coords = [(0, 0), (-1, 0), (0, -1), (1, 0), (0, 1)]
+		self._action_coords = [(0, 0), (0, -1), (1, 0), (0, 1), (-1, 0)]
 		self._reward = 0
 
 	def _get_current_location(self):
