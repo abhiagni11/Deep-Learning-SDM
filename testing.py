@@ -7,7 +7,6 @@ This module initializes the robot class
 Author: Abhijeet Agnihotri
 """
 
-import numpy as np
 import random
 
 from visualize import Visualize

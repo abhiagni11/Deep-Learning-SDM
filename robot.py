@@ -9,6 +9,7 @@ Author: Abhijeet Agnihotri
 
 import numpy as np
 
+
 class Robot:
 
 	def __init__(self, x_dim, y_dim):
