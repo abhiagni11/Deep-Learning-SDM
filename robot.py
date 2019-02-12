@@ -38,4 +38,3 @@ class Robot:
 			self._reward += 100
 		else:
 			self._reward -=1
-		print(self._reward)
