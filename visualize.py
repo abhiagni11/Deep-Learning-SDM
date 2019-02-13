@@ -16,7 +16,7 @@ class Visualize:
 
 	def __init__(self, tunnel_filename, artifact_filename):
 		self._tunnel_map = np.load(tunnel_filename)
-		self._artifact_locations = np.load(artifact_filename)
+		self._artifact_locations = [(x[0], x[1]) for x in np.load(artifact_filename).tolist()]
 		self._y_dim, self._x_dim = self._tunnel_map.shape
 		self.fig, self.ax = plt.subplots()
 

@@ -13,8 +13,8 @@ from visualize import Visualize
 from underground import Underground
 from robot import Robot
 
-TUNNEL_FILE = './maps/tunnel.npy'
-ARTIFACT_FILE = './maps/artifacts.npy'
+TUNNEL_FILE = './maps/tunnel_1.npy'
+ARTIFACT_FILE = './maps/artifacts_1.npy'
 
 
 if __name__ == "__main__":
