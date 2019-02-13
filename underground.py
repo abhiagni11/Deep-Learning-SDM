@@ -37,3 +37,7 @@ class Underground:
 			return True
 		else:
 			return False
+
+	def _get_observation(self, state):
+		# TODO: based on radius or else return the tunnel structure around the robot state
+		return 0
