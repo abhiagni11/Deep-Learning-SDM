@@ -33,7 +33,7 @@ class Visualize:
 		rect = patches.Rectangle((robot_states[0] - 0.5, robot_states[1] - 0.5), 1, 1, linewidth=1, edgecolor='r', facecolor='r')
 		self.ax.add_patch(rect)
 		for artifact in self._artifact_locations:
-			rect = patches.Rectangle((artifact[0] - 0.5, artifact[1] - 0.5), 1, 1, linewidth=1, edgecolor='b', facecolor='none')
+			rect = patches.Rectangle((artifact[1] - 0.5, artifact[0] - 0.5), 1, 1, linewidth=1, edgecolor='b', facecolor='none')
 			self.ax.add_patch(rect)
 		self.ax.plot()
 		# plt.tick_params(axis='both', which='both', bottom=False, top=False, labelbottom=False, right=False, left=False, labelleft=False)

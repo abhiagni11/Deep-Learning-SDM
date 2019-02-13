@@ -27,7 +27,7 @@ if __name__ == "__main__":
 	graph = Visualize(TUNNEL_FILE, ARTIFACT_FILE)
 	graph._initialise_visualization()
 
-	for i in range(50):
+	for i in range(100):
 		state = wall_e._get_current_location()
 		graph._keep_visualizing(state)
 		wall_e._update_reward(tunnel._found_artifact(state))
