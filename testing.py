@@ -13,14 +13,14 @@ from visualize import Visualize
 from underground import Underground
 from robot import Robot
 
-TUNNEL_FILE = './maps/tunnel_1.npy'
-ARTIFACT_FILE = './maps/artifacts_1.npy'
+TUNNEL_FILE = './maps/tunnel.npy'
+ARTIFACT_FILE = './maps/artifacts.npy'
 
 
 if __name__ == "__main__":
 	# Instantiate the environment
 	tunnel = Underground(TUNNEL_FILE, ARTIFACT_FILE)
-	y_dim, x_dim = tunnel._y_dim, tunnel._x_dim
+	x_dim, y_dim = tunnel._x_dim, tunnel._y_dim
 	# Introduce a robot, only one for now
 	wall_e = Robot(y_dim, x_dim)
 	# To visualize

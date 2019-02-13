@@ -17,6 +17,7 @@ class Robot:
 		self._x_dim = x_dim
 		self._tunnel_grid = np.zeros((self._y_dim, self._x_dim))
 		# Definition of entry point can be changed subject to map generation
+		# Note: state = (y,x)
 		self._entry_point = [int(self._y_dim/2), 0]
 		self._current_position = self._entry_point
 		self._action_dict = {"none": 0, "up": 1, "right": 2, "down": 3, "left": 4}
