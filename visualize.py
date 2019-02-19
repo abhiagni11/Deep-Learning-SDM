@@ -43,7 +43,7 @@ class Visualize:
 		for y in range(self._y_dim):
 			for x in range(self._x_dim):
 				if explored_map[x][y]:
-					rect = patches.Circle((y, x), 0.1, linewidth=1, edgecolor='b', facecolor='b')
+					rect = patches.Circle((x, y), 0.1, linewidth=1, edgecolor='b', facecolor='b')
 					self.ax.add_patch(rect)
 
 		for y in range(observation_radius*2 + 1):

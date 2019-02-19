@@ -37,8 +37,8 @@ class Robot:
 		return self._explored_map
 	
 	def _update_explored_map(self):
-		if self._explored_map[self._current_position[1], self._current_position[0]] == 0:
-			self._explored_map[self._current_position[1], self._current_position[0]] = 1
+		if self._explored_map[self._current_position[0], self._current_position[1]] == 0:
+			self._explored_map[self._current_position[0], self._current_position[1]] = 1
 
 	def _update_location(self, state):
 		self._current_position = state
