@@ -12,6 +12,7 @@ import random
 from visualize import Visualize
 from underground import Underground
 from robot import Robot
+from matplotlib import pyplot as plt
 
 TUNNEL_FILE = './maps/tunnel.npy'
 ARTIFACT_FILE = './maps/artifacts.npy'
