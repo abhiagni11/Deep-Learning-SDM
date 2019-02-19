@@ -35,6 +35,9 @@ class Robot:
 
 	def _get_explored_map(self):
 		return self._explored_map
+
+	def _get_total_reward(self):
+		return self._reward
 	
 	def _update_explored_map(self):
 		if self._explored_map[self._current_position[0], self._current_position[1]] == 0:
