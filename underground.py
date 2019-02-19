@@ -39,7 +39,7 @@ class Underground:
 
 	def _check_state_in_tunnel(self, state):
 		# state = (x, y)
-		if state[0] < 0 or state[1] < 0 or state[0] > self._x_dim or state[1] > self._y_dim:
+		if state[0] < 0 or state[1] < 0 or state[0] >= self._x_dim or state[1] >= self._y_dim:
 			return 0
 		else:
 			return self._tunnel_map[state[1]][state[0]]

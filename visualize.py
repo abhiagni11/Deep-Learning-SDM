@@ -16,7 +16,7 @@ class Visualize:
 
 	def __init__(self, tunnel_filename):
 		self._tunnel_map = np.load(tunnel_filename)
-		self._x_dim, self._y_dim = self._tunnel_map.shape
+		self._y_dim, self._x_dim = self._tunnel_map.shape
 		self.fig, self.ax = plt.subplots()
 
 	def _initialise_visualization(self, artifact_locations):
@@ -28,7 +28,7 @@ class Visualize:
 
 	def _check_state_in_tunnel(self, state):
 		# state = (x, y)
-		if state[0] < 0 or state[1] < 0 or state[0] > self._x_dim or state[1] > self._y_dim:
+		if state[0] < 0 or state[1] < 0 or state[0] >= self._x_dim or state[1] >= self._y_dim:
 			return 0
 		else:
 			return self._tunnel_map[state[1]][state[0]]
@@ -49,24 +49,11 @@ class Visualize:
 
 		rect = patches.Rectangle((robot_states[0] - 0.5, robot_states[1] - 0.5), 1, 1, linewidth=1, edgecolor='r', facecolor='r')
 		self.ax.add_patch(rect)
-		
+
 		for artifact in self._artifact_locations:
 			rect = patches.Rectangle((artifact[0] - 0.5, artifact[1] - 0.5), 1, 1, linewidth=1, edgecolor='b', facecolor='none')
 			self.ax.add_patch(rect)
 		self.ax.plot()
 		# plt.tick_params(axis='both', which='both', bottom=False, top=False, labelbottom=False, right=False, left=False, labelleft=False)
 		plt.draw()
-		plt.pause(.1)
-
-
-	def _get_observation(self, state):
-		# state is (x, y)
-		self._current_observation = np.zeros((self._observation_radius*2 + 1, self._observation_radius*2 + 1))
-		for y in range(self._observation_radius*2 + 1):
-			for x in range(self._observation_radius*2 + 1):
-				_i_state = (state[0] + x - self._observation_radius, state[1] + y - self._observation_radius)
-				if self._check_state_in_tunnel(_i_state):
-					self._current_observation[y][x] = 1
-				else:
-					self._current_observation[y][x] = 0
-		return self._current_observation
+		plt.pause(.01)

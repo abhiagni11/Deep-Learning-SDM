@@ -32,7 +32,7 @@ def main():
 	graph = Visualize(TUNNEL_FILE)
 	graph._initialise_visualization(tunnel._get_artifact_locations())
 
-	for i in range(100):
+	for i in range(1000):
 		state = wall_e._get_current_location()
 		graph._keep_visualizing(state, tunnel._get_artifact_locations(), tunnel._get_observation(state))
 		wall_e._update_reward(tunnel._found_artifact(state))
