@@ -15,7 +15,7 @@ class Underground:
 	def __init__(self, tunnel_filename, artifact_filename):
 		# tunnel map is (y, x)
 		self._tunnel_map = np.load(tunnel_filename)
-		self._observation_radius = 2
+		self._observation_radius = 1
 		# artifact locations = (x, y)
 		self._artifact_locations = [(x[1], x[0]) for x in np.load(artifact_filename).tolist()]
 		self._updated_artifact_locations = self._artifact_locations[:]

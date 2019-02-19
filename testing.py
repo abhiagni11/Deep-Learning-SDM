@@ -34,7 +34,7 @@ def main():
 
 	for i in range(1000):
 		state = wall_e._get_current_location()
-		graph._keep_visualizing(state, tunnel._get_artifact_locations(), tunnel._get_observation(state))
+		graph._keep_visualizing(state, tunnel._get_artifact_locations(), tunnel._get_observation(state), wall_e._get_explored_map())
 		wall_e._update_reward(tunnel._found_artifact(state))
 		allowed_actions = tunnel._get_allowed_actions(state)
 

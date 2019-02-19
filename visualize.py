@@ -22,7 +22,7 @@ class Visualize:
 	def _initialise_visualization(self, artifact_locations):
 		self._artifact_locations = artifact_locations
 		plt.tight_layout()
-		plt.imshow(self._tunnel_map, cmap=plt.get_cmap('bone'))
+		self.ax.imshow(self._tunnel_map, cmap=plt.get_cmap('bone'))
 		plt.ion()
 		plt.show()
 
@@ -33,12 +33,18 @@ class Visualize:
 		else:
 			return self._tunnel_map[state[1]][state[0]]
 
-	def _keep_visualizing(self, robot_states, updated_artifact_locations, current_observation):
+	def _keep_visualizing(self, robot_states, updated_artifact_locations, current_observation, explored_map):
 		# TODO: Adapt for multiple robots
 		self._artifact_locations = updated_artifact_locations
-		plt.cla()
-		plt.imshow(self._tunnel_map, cmap=plt.get_cmap('bone'))
+		self.ax.cla()
+		self.ax.imshow(self._tunnel_map, cmap=plt.get_cmap('bone'))
 		observation_radius = len(current_observation[0])//2
+
+		for y in range(self._y_dim):
+			for x in range(self._x_dim):
+				if explored_map[x][y]:
+					rect = patches.Circle((y, x), 0.1, linewidth=1, edgecolor='b', facecolor='b')
+					self.ax.add_patch(rect)
 
 		for y in range(observation_radius*2 + 1):
 			for x in range(observation_radius*2 + 1):
@@ -54,6 +60,6 @@ class Visualize:
 			rect = patches.Rectangle((artifact[0] - 0.5, artifact[1] - 0.5), 1, 1, linewidth=1, edgecolor='b', facecolor='none')
 			self.ax.add_patch(rect)
 		self.ax.plot()
-		# plt.tick_params(axis='both', which='both', bottom=False, top=False, labelbottom=False, right=False, left=False, labelleft=False)
+		# self.ax.tick_params(axis='both', which='both', bottom=False, top=False, labelbottom=False, right=False, left=False, labelleft=False)
 		plt.draw()
 		plt.pause(.01)
