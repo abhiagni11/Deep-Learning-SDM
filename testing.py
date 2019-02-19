@@ -39,6 +39,17 @@ def main():
 
 		# randomly give action
 		action = random.choice(allowed_actions)
+		
+		# user input action
+		# direction = input("which action? input 1-up, 2-down, 3-right, 4-left")
+		# if direction == '1':
+		# 	action = 'up'
+		# elif direction == '2':
+		# 	action = 'down'
+		# elif direction == '3':
+		# 	action = 'right'
+		# elif direction == '4':
+		# 	action = 'left'
 
 		# instead: query based on artifact_fidelity_matrix which will guide us which frontier to go to!! say if you have a planner class:
 		#

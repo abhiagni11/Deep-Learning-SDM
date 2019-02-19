@@ -40,6 +40,10 @@ class Visualize:
 		self.ax.imshow(self._tunnel_map, cmap=plt.get_cmap('bone'))
 		observation_radius = len(current_observation[0])//2
 
+		if len(self._artifact_locations) > 0:
+			# Draw heat map
+			plt.imshow(fidelity_map, cmap=plt.get_cmap('hot'), interpolation='nearest')
+
 		# Plot observation of the robot
 		for y in range(observation_radius*2 + 1):
 			for x in range(observation_radius*2 + 1):
@@ -63,8 +67,6 @@ class Visualize:
 				if explored_map[x][y]:
 					rect = patches.Circle((x, y), 0.1, linewidth=1, edgecolor='b', facecolor='b')
 					self.ax.add_patch(rect)
-
-		plt.imshow(fidelity_map, cmap=plt.get_cmap('hot'), interpolation='nearest')
 
 		self.ax.plot()
 		# self.ax.tick_params(axis='both', which='both', bottom=False, top=False, labelbottom=False, right=False, left=False, labelleft=False)
