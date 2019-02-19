@@ -24,7 +24,6 @@ class Underground:
 		self._action_coords = [(0, 0), (0, -1), (1, 0), (0, 1), (-1, 0)]
 		self._artifact_fidelity_map = np.zeros_like(self._tunnel_map)
 		self._update_artifact_fidelity_map()
-		self._get_observation((int(self._x_dim/2), 0))
 
 	def _update_artifact_fidelity_map(self):
 		self._artifact_fidelity_map = np.zeros_like(self._tunnel_map)

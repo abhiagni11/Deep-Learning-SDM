@@ -14,8 +14,8 @@ from underground import Underground
 from robot import Robot
 from matplotlib import pyplot as plt
 
-TUNNEL_FILE = './maps/tunnel.npy'
-ARTIFACT_FILE = './maps/artifacts.npy'
+TUNNEL_FILE = './maps/tunnel_2.npy'
+ARTIFACT_FILE = './maps/artifacts_2.npy'
 
 
 def shutdown():
@@ -48,6 +48,7 @@ def main():
 		# current_observation = tunnel._get_observation(state)
 		# action = frontier_get_action(fidelity_map, explored_map, current_observation, state)
 		wall_e._give_action(action)
+		# print(tunnel._get_artifact_fidelity_map())
 
 
 if __name__ == "__main__":
