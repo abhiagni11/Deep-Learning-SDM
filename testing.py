@@ -8,7 +8,7 @@ Author: Abhijeet Agnihotri
 """
 
 import random
-
+import atexit
 from visualize import Visualize
 from underground import Underground
 from robot import Robot
@@ -18,24 +18,44 @@ TUNNEL_FILE = './maps/tunnel.npy'
 ARTIFACT_FILE = './maps/artifacts.npy'
 
 
-if __name__ == "__main__":
+def shutdown():
+	print('\nGoodbye')
+
+def main():
+	atexit.register(shutdown)
 	# Instantiate the environment
 	tunnel = Underground(TUNNEL_FILE, ARTIFACT_FILE)
 	x_dim, y_dim = tunnel._x_dim, tunnel._y_dim
 	# Introduce a robot, only one for now
-	wall_e = Robot(y_dim, x_dim)
+	wall_e = Robot(x_dim, y_dim)
 	# To visualize
-	graph = Visualize(TUNNEL_FILE, ARTIFACT_FILE)
-	graph._initialise_visualization()
+	graph = Visualize(TUNNEL_FILE)
+	graph._initialise_visualization(tunnel._get_artifact_locations())
 
 	for i in range(100):
 		state = wall_e._get_current_location()
-		graph._keep_visualizing(state)
+		graph._keep_visualizing(state, tunnel._get_artifact_locations(), tunnel._get_observation(state))
 		wall_e._update_reward(tunnel._found_artifact(state))
 		allowed_actions = tunnel._get_allowed_actions(state)
+
+		# randomly give action
 		action = random.choice(allowed_actions)
+
+		# instead: query based on artifact_fidelity_matrix which will guide us which frontier to go to!! say if you have a planner class:
+		#
+		# fidelity_map = tunnel._get_artifact_fidelity_map()
+		# explored_map = wall_e._get_explored_map()
+		# current_observation = tunnel._get_observation(state)
+		# action = frontier_get_action(fidelity_map, explored_map, current_observation, state)
 		wall_e._give_action(action)
 
+
+if __name__ == "__main__":
+	try:
+		print('Started exploring\n')
+		main()
+	except (KeyboardInterrupt, SystemExit):
+		raise
 
 
 
