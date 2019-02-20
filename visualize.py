@@ -18,6 +18,7 @@ class Visualize:
 		self._tunnel_map = np.load(tunnel_filename)
 		self._y_dim, self._x_dim = self._tunnel_map.shape
 		self.fig, self.ax = plt.subplots()
+		self.fig.canvas.set_window_title("Sub-T Simulator")
 
 	def _initialise_visualization(self, artifact_locations):
 		self._artifact_locations = artifact_locations

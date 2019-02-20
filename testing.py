@@ -13,8 +13,8 @@ from visualize import Visualize
 from underground import Underground
 from robot import Robot
 
-TUNNEL_FILE = './maps/tunnel_1.npy'
-ARTIFACT_FILE = './maps/artifacts_1.npy'
+TUNNEL_FILE = './maps/tunnel_5.npy'
+ARTIFACT_FILE = './maps/artifacts_5.npy'
 
 
 def shutdown():
@@ -39,8 +39,8 @@ def main():
 
 		# randomly give action
 		action = random.choice(allowed_actions)
-		
-		# user input action
+
+		# # user input action
 		# direction = input("which action? input 1-up, 2-down, 3-right, 4-left")
 		# if direction == '1':
 		# 	action = 'up'
