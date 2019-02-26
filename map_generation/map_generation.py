@@ -263,7 +263,7 @@ def getTiles(gridDimension, numPOI):
     plt.show()
     return tiles
 
-gridDimension = [15, 15]
-numPOI = 12
-t = getTiles(gridDimension,numPOI)
-print(t)
+# gridDimension = [15, 15]
+# numPOI = 12
+# t = getTiles(gridDimension,numPOI)
+# print(t)
