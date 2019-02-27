@@ -45,7 +45,7 @@ def a_star_search(grid, start, goal):
         for d in dirs_motion:
             x, y = d(current[0], current[1])
             # check for bounds
-            if 0 <= x < len(grid) and 0 <= y < len(grid[0]):
+            if 0 <= x < len(grid) and 0 <= y < len(grid[0]) and grid[x,y]==1:
                 next = (x,y)
                 # making all travel as cost 1
                 new_cost = cost_so_far[current] + 1
@@ -67,6 +67,9 @@ def getPath(grid, start, goal):
     while pointer != start:
         path.append(came_from_[pointer])
         pointer = came_from_[pointer]
+    print("grid", grid)
+    print("path", path)
+    print("start:",start," goal:",goal)
     return path
 
 # create random points of interests.
