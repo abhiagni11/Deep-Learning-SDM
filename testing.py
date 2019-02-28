@@ -36,7 +36,7 @@ def main():
 	x_dim, y_dim = tunnel._x_dim, tunnel._y_dim
 
 	steps = 0
-	budget = 50
+	budget = 200
 
 	# Introduce a robot, only one for now
 	wall_e = Robot(x_dim, y_dim)

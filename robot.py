@@ -88,9 +88,9 @@ class Robot:
 				if state_x < 0 or state_x > 23:
 					continue
 
+				self._observed_map[state_x][state_y] = observation[x][y]
 				# If the robot has not yet explored that area, add it to the observation map and frontiers map
 				if self._explored_map[state_x][state_y] == 0:
-					self._observed_map[state_x][state_y] = 1
 					self._frontiers[state_x][state_y] = observation[x][y]
 
 	def _update_location(self, state):
