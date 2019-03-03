@@ -65,17 +65,12 @@ def eval_net(dataloader):
         outputs = net(images)
         flat_labels = labels.view(-1, net.num_flat_features(labels))
         clipped_outputs = (outputs>0.5)
-        #print("outputs sum", clipped_outputs.sum())
-        #print("correct sum", (clipped_outputs==(flat_labels>0.5)).sum())
         wrong += (clipped_outputs!=(flat_labels>0.5)).sum()
-        #print("wrong sum", wrong, " of ",(flat_labels>0.5).sum())
-        #print("artifacts",(flat_labels>0.5).sum())
-        #print("percent accuracy", (wrong - (flat_labels>0.5).sum()).item()/(flat_labels>0.5).sum().item() * 100)
-        #_, predicted = torch.max(outputs.data, 1)
-        print('\r[wrong {} of {}]'.format((clipped_outputs!=(flat_labels>0.5)).sum(), len(flat_labels.reshape(1,-1)[0])), end='',)
-        #print("wrong", (clipped_outputs!=(flat_labels>0.5)).sum(), " of ",len(flat_labels.reshape(1,-1)[0]), end='',)
+        #print('\r[output {}]'.format(outputs), end='',)
+        #print('')
+        print('\r[wrong {} of {}, artifacts {}]'.format((clipped_outputs!=(flat_labels>0.5)).sum(), len(flat_labels.reshape(1,-1)[0]), (flat_labels>0.5).sum()), end='',)
         total += len(flat_labels.reshape(1,-1)[0])
-        #correct += (predicted == labels.data).sum()
+
         loss = criterion(outputs, flat_labels)
         total_loss += loss.data.item()
     print(' ')
@@ -84,10 +79,10 @@ def eval_net(dataloader):
 
 if __name__ == "__main__":
     BATCH_SIZE = 12 #mini_batch size
-    MAX_EPOCH = 10 #maximum epoch to train
+    MAX_EPOCH = 15 #maximum epoch to train
 
     # load data 
-    with open('synthetic_data/synthetic_dataset.pickle', 'rb') as handle:
+    with open('../synthetic_data/synthetic_dataset.pickle', 'rb') as handle:
         data = pickle.load(handle)
 
     #transform = transforms.Compose(
@@ -123,7 +118,7 @@ if __name__ == "__main__":
     net.train() # Why would I do this?
 
     #criterion = nn.CrossEntropyLoss()
-    criterion = nn.BCEWithLogitsLoss()
+    criterion = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([120]))
     optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
 
     print('Start training...')
@@ -144,6 +139,7 @@ if __name__ == "__main__":
             # forward + backward + optimize
             outputs = net(reInputs)
             flat_labels = labels.view(-1, net.num_flat_features(labels))
+            weights = 120* flat_labels + 1 
             loss = criterion(outputs, flat_labels)
             loss.backward()
             optimizer.step()
