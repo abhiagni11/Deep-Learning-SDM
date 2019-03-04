@@ -38,7 +38,7 @@ class Frontier:
         # Finds the largest value in the frontier values and returns the index
         choice_index = frontier_values.index(np.amax(frontier_values))
 
-        print("Robot Position:", current)
-        print("Chosen path", paths[choice_index])
+        # print("Robot Position:", current)
+        # print("Chosen path", paths[choice_index])
 
         return paths[choice_index]

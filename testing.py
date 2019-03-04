@@ -14,8 +14,8 @@ from underground import Underground
 from robot import Robot
 from frontier2 import Frontier
 
-TUNNEL_FILE = './maps/tunnel_5.npy'
-ARTIFACT_FILE = './maps/artifacts_5.npy'
+TUNNEL_FILE = './maps/tunnel.npy'
+ARTIFACT_FILE = './maps/artifacts.npy'
 
 
 def shutdown():
@@ -53,8 +53,8 @@ def main():
 
 
 	while steps < budget:
-		print("####################")
-		print("Loop counter:", steps)
+		#print("####################")
+		#print("Loop counter:", steps)
 		# Get matrix of observed frontier values around wall-e and update observed map
 		observation = tunnel._get_observation(state)
 		wall_e.update_observed_map(observation, tunnel._observation_radius)
@@ -80,7 +80,7 @@ def main():
 				# Move robot and update world
 				state = tick(tunnel, wall_e, action)
 				steps += 1
-				print("Reward", wall_e._reward)
+				#print("Reward", wall_e._reward)
 				graph._keep_visualizing(state, tunnel._get_artifact_locations(), observation,
 										wall_e._get_explored_map(), tunnel._get_artifact_fidelity_map())
 

@@ -47,10 +47,10 @@ class Robot:
 			return "up"
 		else:
 			# This breaks if there are no valid actions
-			print("Allowed actions", allowed_actions)
-			print("Robot position", self._current_position)
-			print("Goal:", goal)
-			print("SOMETHING HAS GONE TERRIBLY WRONG")
+			# print("Allowed actions", allowed_actions)
+			# print("Robot position", self._current_position)
+			# print("Goal:", goal)
+			# print("SOMETHING HAS GONE TERRIBLY WRONG")
 			return False
 
 	def _give_action(self, action):
