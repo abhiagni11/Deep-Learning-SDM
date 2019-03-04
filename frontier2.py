@@ -13,7 +13,7 @@ from math import sqrt
 
 class Frontier:
 
-    def get_next_frontier(self, current, observed_map, frontiers):
+    def get_next_frontier(self, current, observed_map, frontiers, value_dist):
         frontier_values = []
         paths = []
 
@@ -30,7 +30,17 @@ class Frontier:
 
             # Append the frontier value at that point, scaled based on the cost to get there.
             # Current point is included in path, so length - 1
-            frontier_values.append(frontiers[frontier_indices[0, i]][frontier_indices[1, i]] / sqrt(path_length-1))
+            if value_dist == 'normal':
+                frontier_values.append(frontiers[frontier_indices[0, i]][frontier_indices[1, i]] / (path_length - 1))
+            elif value_dist == 'sqrt':
+                frontier_values.append(frontiers[frontier_indices[0, i]][frontier_indices[1, i]] / sqrt(path_length-1))
+            elif value_dist == 'value':
+                frontier_values.append(frontiers[frontier_indices[0, i]][frontier_indices[1, i]])
+            elif value_dist == 'subtract':
+                frontier_values.append(frontiers[frontier_indices[0, i]][frontier_indices[1, i]] - (path_length - 1))
+            elif value_dist == 'closest':
+                frontier_values.append(100 - (path_length - 1))
+
 
             # Keep track of all paths to all frontiers
             paths.append(path)
@@ -38,7 +48,7 @@ class Frontier:
         # Finds the largest value in the frontier values and returns the index
         choice_index = frontier_values.index(np.amax(frontier_values))
 
-        print("Robot Position:", current)
-        print("Chosen path", paths[choice_index])
+        # print("Robot Position:", current)
+        # print("Chosen path", paths[choice_index])
 
         return paths[choice_index]
