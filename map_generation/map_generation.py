@@ -45,7 +45,7 @@ def a_star_search(grid, start, goal):
         for d in dirs_motion:
             x, y = d(current[0], current[1])
             # check for bounds
-            if 0 <= x < len(grid) and 0 <= y < len(grid[0]) and grid[x,y]>0:
+            if 0 <= x < len(grid) and 0 <= y < len(grid[0]): #and grid[x,y]>0:
                 next = (x,y)
                 # making all travel as cost 1
                 new_cost = cost_so_far[current] + 1
@@ -266,7 +266,7 @@ def getTiles(gridDimension, numPOI):
     plt.show()
     return tiles
 
-# gridDimension = [15, 15]
-# numPOI = 12
-# t = getTiles(gridDimension,numPOI)
-# print(t)
+gridDimension = [16, 16]
+numPOI = 9
+t = getTiles(gridDimension,numPOI)
+print(t)
