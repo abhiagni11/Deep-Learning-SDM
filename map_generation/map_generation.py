@@ -67,15 +67,9 @@ def getPath(grid, start, goal):
     while pointer != start:
         path.append(came_from_[pointer])
         pointer = came_from_[pointer]
-<<<<<<< HEAD
-    #print("grid", grid)
-    #print("path", path)
-    #print("start:",start," goal:",goal)
-=======
     # print("grid", grid)
     # print("path", path)
     # print("start:",start," goal:",goal)
->>>>>>> origin/Frontier_Testing
     return path
 
 # create random points of interests.
@@ -92,11 +86,7 @@ def connectGrid(pts, grid):
     for i in range(len(pts)):
         for j in range(i+1, len(pts)):
             path = getPath(np.zeros((len(grid), len(grid[0]))), pts[i], pts[j])
-<<<<<<< HEAD
-            #print("astarpath",path)
-=======
             # print("astarpath",path)
->>>>>>> origin/Frontier_Testing
             for k in path:
                 grid[k[0], k[1]] = 1
 
@@ -268,13 +258,8 @@ def getTiles(gridDimension, numPOI):
                     tiles[x,y] = 16  # 16 is the code for turn with yaw pi.
 
 
-<<<<<<< HEAD
-    #print(path_viz)
-    #print(tiles)
-=======
     # print(path_viz)
     # print(tiles)
->>>>>>> origin/Frontier_Testing
     plt.imshow(path_viz)
     plt.ylabel('x')
     plt.xlabel('y')

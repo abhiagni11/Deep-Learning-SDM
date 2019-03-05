@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+#!/usr/b
+in/env python3
 
 """ Testing Module
 
@@ -13,13 +14,7 @@ from visualize import Visualize
 from underground import Underground
 from robot import Robot
 from frontier2 import Frontier
-<<<<<<< HEAD
-
-TUNNEL_FILE = './maps/tunnel.npy'
-ARTIFACT_FILE = './maps/artifacts.npy'
-=======
 import numpy as np
->>>>>>> origin/Frontier_Testing
 
 
 def shutdown():
@@ -68,41 +63,6 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 
 	# Runs until Wall-e runs out of budget or there are no frontiers left to explore
 
-<<<<<<< HEAD
-	while steps < budget:
-		#print("####################")
-		#print("Loop counter:", steps)
-		# Get matrix of observed frontier values around wall-e and update observed map
-		observation = tunnel._get_observation(state)
-		wall_e.update_observed_map(observation, tunnel._observation_radius)
-
-		# Update visualization
-		graph._keep_visualizing(state, tunnel._get_artifact_locations(), observation, wall_e._get_explored_map(), tunnel._get_artifact_fidelity_map())
-
-		# Pick the next frontier and get a path to that point
-		path = frontier.get_next_frontier(state, wall_e._observed_map, wall_e._frontiers)
-		# Loop through the path and update the robot at each step
-		for point in path:
-			# print("Next point", point)
-			distance = abs(wall_e._get_current_location()[0] - point[0]) + abs(wall_e._get_current_location()[1] - point[1])
-
-			# While loop continues to move robot until point has been reached
-			while distance > 0:
-				# print("Robot Position", wall_e._get_current_location())
-				# Find allowed actions
-				allowed_actions = tunnel._get_allowed_actions(state)
-				# Get the action that will take the robot to the next point
-				action = wall_e._next_action(point, allowed_actions)
-				# print("Action", action)
-				# Move robot and update world
-				state = tick(tunnel, wall_e, action)
-				steps += 1
-				#print("Reward", wall_e._reward)
-				graph._keep_visualizing(state, tunnel._get_artifact_locations(), observation,
-										wall_e._get_explored_map(), tunnel._get_artifact_fidelity_map())
-
-				# Update the distance to the next point
-=======
 	try:
 		while steps < budget and len(tunnel._updated_artifact_locations) > 0:
 			# Get matrix of observed frontier values around wall-e and update observed map
@@ -118,7 +78,6 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 			# Loop through the path and update the robot at each step
 			for point in path:
 				# print("Next point", point)
->>>>>>> origin/Frontier_Testing
 				distance = abs(wall_e._get_current_location()[0] - point[0]) + abs(wall_e._get_current_location()[1] - point[1])
 
 				# While loop continues to move robot until point has been reached
