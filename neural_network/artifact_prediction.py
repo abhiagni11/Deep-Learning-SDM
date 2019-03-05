@@ -20,6 +20,7 @@ import torchvision
 import torchvision.transforms as transforms
 import torch.optim as optim
 import matplotlib.pyplot as plt
+import numpy as np
 import pickle 
 
 class Net(nn.Module):
@@ -35,7 +36,7 @@ class Net(nn.Module):
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
-        #x = F.relu(self.conv2(x))
+        x = F.relu(self.conv2(x))
         x = self.pool(x)
         x = F.relu(self.conv3(x))
         #x = F.relu(self.conv4(x))
@@ -52,20 +53,21 @@ class Net(nn.Module):
             num_features *= s
         return num_features
 
-def eval_net(dataloader):
+def eval_net(dataloader, thres_prob):
     wrong = 0
     total = 0
     total_loss = 0
     outputs = 0
     net.eval() # Why would I do this?
     criterion = nn.BCEWithLogitsLoss(size_average=False)
+    loss_list = []
     for data in dataloader:
         images, labels = data
         images, labels = Variable(images), Variable(labels)
         images = images.reshape(images.shape[0], 1, images.shape[1],images.shape[2])
         outputs = net(images)
         flat_labels = labels.view(-1, net.num_flat_features(labels))
-        clipped_outputs = (outputs>0.7)
+        clipped_outputs = (outputs> thres_prob)
         wrong += (clipped_outputs!=(flat_labels>0.5)).sum()
 
         artifacts = (flat_labels>0.5).sum()
@@ -74,35 +76,60 @@ def eval_net(dataloader):
               len(flat_labels.reshape(1,-1)[0]), \
               (flat_labels>0.5).sum(), artifacts_found),  end='',)
         total += len(flat_labels.reshape(1,-1)[0])
-
+        
         loss = criterion(outputs, flat_labels)
+        loss_list.append(loss.data.item())
         total_loss += loss.data.item()
     print(' ')
+    
+    #Display the output of the CNN 
+    viz_images = torch.Tensor(images)
+    grid_ = viz_images.detach()
+    outgrid = torchvision.utils.make_grid(grid_,nrow=6)
+    #plt.imshow(outgrid.permute(1,2,0))
+    #plt.pause(0.0000001)
+    
     #Display the output of the CNN 
     viz_outputs = torch.Tensor(outputs)
     grid_ = viz_outputs.reshape(12,1,16,16).detach()
     outgrid = torchvision.utils.make_grid(grid_,nrow=6)
-    plt.imshow(outgrid.permute(1,2,0))
-    plt.pause(0.0000001)
+    #plt.imshow(outgrid.permute(1,2,0))
+    #plt.pause(0.0000001)
     
     #Display the labels
     viz_labels = torch.Tensor(labels)
     grid_ = viz_labels.reshape(12,1,16,16).detach()
     outgrid = torchvision.utils.make_grid(grid_,nrow=6)
-    plt.imshow(outgrid.permute(1,2,0))
-    plt.pause(0.0000001)
+    #plt.imshow(outgrid.permute(1,2,0))
+    #plt.pause(0.0000001)
 
+    mean_ = np.mean(loss_list)
+    std_ = np.std(loss_list)
     net.train() # Why would I do this?
-    return total_loss / total, wrong.item() / total
+    return total_loss / total, wrong.item() / total, mean_, std_
 
 if __name__ == "__main__":
+    
+    ########################################################
+    ########## PARAMETERS ##################################
+    ########################################################
+    
     BATCH_SIZE = 12 #mini_batch size
     MAX_EPOCH = 15 #maximum epoch to train
-
+    thres_prob = 0.7 
+    positive_weight = 100
+    learning_rate = 0.01
+    network_momentum = 0.9
+    
+    
+    
     # load data 
     with open('../synthetic_data/synthetic_dataset.pickle', 'rb') as handle:
         data = pickle.load(handle)
-
+        
+    #loss_plot = plt.figure()
+    #cnn_output_plot = plt.figure()
+    #labels_plot = plt.figure()
     #transform = transforms.Compose(
     #    [transforms.ToTensor(),
     #     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]) #torchvision.transforms.Normalize(mean, std)
@@ -113,7 +140,7 @@ if __name__ == "__main__":
     tensor_training_labels = torch.stack([torch.Tensor(s) for s in data["training_labels"]])
     
     trainset = torch.utils.data.TensorDataset(tensor_training_data, tensor_training_labels)
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=BATCH_SIZE,
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=BATCH_SIZE, drop_last=True,
                                               shuffle=True, num_workers=2)
 
     #Preparing Testing Data
@@ -121,7 +148,7 @@ if __name__ == "__main__":
     tensor_testing_labels = torch.stack([torch.Tensor(s) for s in data["testing_labels"]])
     
     testset = torch.utils.data.TensorDataset(tensor_testing_data, tensor_testing_labels)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=BATCH_SIZE,drop_last=True,
+    testloader = torch.utils.data.DataLoader(testset, batch_size=BATCH_SIZE, drop_last=True,
                                              shuffle=False, num_workers=2)
 
     print('Building model...')
@@ -129,9 +156,12 @@ if __name__ == "__main__":
     net = Net()
     net.train() # Why would I do this?
 
-    criterion = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([175]))
-    optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
-
+    criterion = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([positive_weight]))
+    optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=network_momentum)
+    
+    test_mean = []
+    test_std = []
+    
     print('Start training...')
     for epoch in range(MAX_EPOCH):  # Epoch looping 
 
@@ -162,8 +192,15 @@ if __name__ == "__main__":
                       (i + 1, running_loss / 500))
                 running_loss = 0.0
         print('    Finish training this EPOCH, start evaluating...')
-        train_loss, train_acc = eval_net(trainloader)
-        test_loss, test_acc = eval_net(testloader)
+        train_loss, train_acc, mean_, std_ = eval_net(trainloader, thres_prob)
+        test_loss, test_acc , mean_, std_ = eval_net(testloader, thres_prob)
+        print("mean loss", mean_, std_)
+        test_mean.append(mean_)
+        test_std.append(std_)
+        plt.errorbar(range(epoch+1), test_mean, test_std)
+        plt.xlabel("NUMBER OF EPOCH")
+        plt.ylabel("Binary Cross Entropy Loss")
+        plt.pause(0.00001)
         print('EPOCH: %d train_loss: %.5f train_acc: %.5f test_loss: %.5f test_acc %.5f' %
               (epoch+1, train_loss, train_acc, test_loss, test_acc))
     print('Finished Training')
