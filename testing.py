@@ -74,6 +74,7 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 
 			# Pick the next frontier and get a path to that point
 			path = frontier.get_next_frontier(state, wall_e._observed_map, wall_e._frontiers, value_dist)
+
 			# Loop through the path and update the robot at each step
 			for point in path:
 				# print("Next point", point)
@@ -113,7 +114,7 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 
 if __name__ == "__main__":
 
-	tunnel_num = 1
+	tunnel_num = 4
 	value_dist = 'closest'
 	TUNNEL_FILE = './maps/tunnel_{}.npy'.format(tunnel_num)
 	ARTIFACT_FILE = './maps/artifacts_{}.npy'.format(tunnel_num)

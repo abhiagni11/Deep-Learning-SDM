@@ -47,15 +47,15 @@ class Robot:
 			return "up"
 		else:
 			# This breaks if there are no valid actions
-			# print("Allowed actions", allowed_actions)
-			# print("Robot position", self._current_position)
-			# print("Goal:", goal)
-			# print("SOMETHING HAS GONE TERRIBLY WRONG")
+			print("Allowed actions", allowed_actions)
+			print("Robot position", self._current_position)
+			print("Goal:", goal)
+			print("SOMETHING HAS GONE TERRIBLY WRONG")
 			return False
 
 	def _give_action(self, action):
-		new_state = (self._current_position[0] + self._action_coords[self._action_dict[action]][0],
-					 self._current_position[1] + self._action_coords[self._action_dict[action]][1])
+		# print(action)
+		new_state = (self._current_position[0] + self._action_coords[self._action_dict[action]][0], self._current_position[1] + self._action_coords[self._action_dict[action]][1])
 		self._update_location(new_state)
 
 	def _get_explored_map(self):

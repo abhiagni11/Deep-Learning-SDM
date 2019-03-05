@@ -7,7 +7,7 @@ Author: Anna Nickelson
 """
 
 import numpy as np
-from map_generation import map_generation
+import a_star
 from math import sqrt
 
 
@@ -24,7 +24,7 @@ class Frontier:
         # This gets updated each time because frontier values change
         for i in range(frontier_indices.shape[1]):
             # Find shortest path to the next frontier and the length of that path
-            path = np.array(map_generation.getPath(observed_map, current, frontier_indices[:, i]))
+            path = np.array(a_star.getPath(observed_map, current, frontier_indices[:, i]))
             path = np.flip(path, 0)
             path_length = np.shape(path)[0]
 
@@ -40,7 +40,6 @@ class Frontier:
                 frontier_values.append(frontiers[frontier_indices[0, i]][frontier_indices[1, i]] - (path_length - 1))
             elif value_dist == 'closest':
                 frontier_values.append(100 - (path_length - 1))
-
 
             # Keep track of all paths to all frontiers
             paths.append(path)
