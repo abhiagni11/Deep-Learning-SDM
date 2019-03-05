@@ -91,14 +91,14 @@ def eval_net(dataloader, thres_prob):
     
     #Display the output of the CNN 
     viz_outputs = torch.Tensor(outputs)
-    grid_ = viz_outputs.reshape(12,1,16,16).detach()
+    grid_ = viz_outputs.reshape(images.shape).detach()
     outgrid = torchvision.utils.make_grid(grid_,nrow=6)
     #plt.imshow(outgrid.permute(1,2,0))
     #plt.pause(0.0000001)
     
     #Display the labels
     viz_labels = torch.Tensor(labels)
-    grid_ = viz_labels.reshape(12,1,16,16).detach()
+    grid_ = viz_labels.reshape(images.shape).detach()
     outgrid = torchvision.utils.make_grid(grid_,nrow=6)
     #plt.imshow(outgrid.permute(1,2,0))
     #plt.pause(0.0000001)
