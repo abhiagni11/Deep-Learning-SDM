@@ -38,9 +38,12 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 	steps = 0
 	budget = 200
 
+	# Store value at the start because it changes over time
+	num_artifacts = len(tunnel._updated_artifact_locations)
+
 	# Tracks time steps when rewards are found
 	points_found = []
-	score_list = np.zeros(budget)
+	score_list = np.ones(budget-1)
 
 	# Introduce a robot, only one for now
 	wall_e = Robot(x_dim, y_dim)
@@ -97,7 +100,8 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 					if reward_bool:
 						points_found.append(steps)
 
-					score_list[steps - 1] = len(points_found)
+					# Normalizes to be percent of total artifacts found
+					score_list[steps - 1] = len(points_found) / num_artifacts
 
 					if visualize:
 						graph._keep_visualizing(state, tunnel._get_artifact_locations(), observation,
@@ -105,6 +109,9 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 
 					# Update the distance to the next point
 					distance = abs(wall_e._get_current_location()[0] - point[0]) + abs(wall_e._get_current_location()[1] - point[1])
+
+				if steps >= budget:
+					break
 
 	except ValueError:
 		print("Wall-e has not captured all POIs, but has run out of frontiers")
@@ -114,8 +121,8 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 
 if __name__ == "__main__":
 
-	tunnel_num = 4
-	value_dist = 'closest'
+	tunnel_num = 3
+	value_dist = 'value'
 	TUNNEL_FILE = './maps/tunnel_{}.npy'.format(tunnel_num)
 	ARTIFACT_FILE = './maps/artifacts_{}.npy'.format(tunnel_num)
 

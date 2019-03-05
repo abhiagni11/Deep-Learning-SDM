@@ -36,8 +36,8 @@ class Frontier:
                 frontier_values.append(frontiers[frontier_indices[0, i]][frontier_indices[1, i]] / sqrt(path_length-1))
             elif value_dist == 'value':
                 frontier_values.append(frontiers[frontier_indices[0, i]][frontier_indices[1, i]])
-            elif value_dist == 'subtract':
-                frontier_values.append(frontiers[frontier_indices[0, i]][frontier_indices[1, i]] - (path_length - 1))
+            elif value_dist == 'quarter':
+                frontier_values.append(frontiers[frontier_indices[0, i]][frontier_indices[1, i]] / (path_length - 1)**(1/4))
             elif value_dist == 'closest':
                 frontier_values.append(100 - (path_length - 1))
 
