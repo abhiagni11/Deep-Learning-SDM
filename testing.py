@@ -1,5 +1,4 @@
-#!/usr/b
-in/env python3
+#!/usr/bin/env python3
 
 """ Testing Module
 
