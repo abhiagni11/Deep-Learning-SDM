@@ -19,6 +19,7 @@ import torch.nn.functional as F
 import torchvision
 import torchvision.transforms as transforms
 import torch.optim as optim
+import matplotlib.pyplot as plt
 import pickle 
 
 class Net(nn.Module):
@@ -55,25 +56,42 @@ def eval_net(dataloader):
     wrong = 0
     total = 0
     total_loss = 0
+    outputs = 0
     net.eval() # Why would I do this?
     criterion = nn.BCEWithLogitsLoss(size_average=False)
     for data in dataloader:
         images, labels = data
         images, labels = Variable(images), Variable(labels)
-        #HACK 
-        images = images.reshape(images.shape[0], 1, 16,16)
+        images = images.reshape(images.shape[0], 1, images.shape[1],images.shape[2])
         outputs = net(images)
         flat_labels = labels.view(-1, net.num_flat_features(labels))
-        clipped_outputs = (outputs>0.5)
+        clipped_outputs = (outputs>0.7)
         wrong += (clipped_outputs!=(flat_labels>0.5)).sum()
-        #print('\r[output {}]'.format(outputs), end='',)
-        #print('')
-        print('\r[wrong {} of {}, artifacts {}]'.format((clipped_outputs!=(flat_labels>0.5)).sum(), len(flat_labels.reshape(1,-1)[0]), (flat_labels>0.5).sum()), end='',)
+
+        artifacts = (flat_labels>0.5).sum()
+        artifacts_found = (clipped_outputs & (flat_labels>0.5)).sum() 
+        print('\r[wrong {} of {}, artifacts {}, found {}]'.format((clipped_outputs!=(flat_labels>0.5)).sum(), \
+              len(flat_labels.reshape(1,-1)[0]), \
+              (flat_labels>0.5).sum(), artifacts_found),  end='',)
         total += len(flat_labels.reshape(1,-1)[0])
 
         loss = criterion(outputs, flat_labels)
         total_loss += loss.data.item()
     print(' ')
+    #Display the output of the CNN 
+    viz_outputs = torch.Tensor(outputs)
+    grid_ = viz_outputs.reshape(12,1,16,16).detach()
+    outgrid = torchvision.utils.make_grid(grid_,nrow=6)
+    plt.imshow(outgrid.permute(1,2,0))
+    plt.pause(0.0000001)
+    
+    #Display the labels
+    viz_labels = torch.Tensor(labels)
+    grid_ = viz_labels.reshape(12,1,16,16).detach()
+    outgrid = torchvision.utils.make_grid(grid_,nrow=6)
+    plt.imshow(outgrid.permute(1,2,0))
+    plt.pause(0.0000001)
+
     net.train() # Why would I do this?
     return total_loss / total, wrong.item() / total
 
@@ -90,39 +108,32 @@ if __name__ == "__main__":
     #     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]) #torchvision.transforms.Normalize(mean, std)
     
     # SKIPPED NORMALIZATION
+    #Preparing Training Data
     tensor_training_data = torch.stack([torch.Tensor(s) for s in data["training_data"]])
     tensor_training_labels = torch.stack([torch.Tensor(s) for s in data["training_labels"]])
     
     trainset = torch.utils.data.TensorDataset(tensor_training_data, tensor_training_labels)
-    
-    #trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
-    #                                       download=True, transform=transform)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=BATCH_SIZE,
                                               shuffle=True, num_workers=2)
 
-    #testset = torchvision.datasets.CIFAR10(root='./data', train=False,
-    #                                       download=True, transform=transform)
+    #Preparing Testing Data
     tensor_testing_data = torch.stack([torch.Tensor(s) for s in data["testing_data"]])
     tensor_testing_labels = torch.stack([torch.Tensor(s) for s in data["testing_labels"]])
     
     testset = torch.utils.data.TensorDataset(tensor_testing_data, tensor_testing_labels)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=BATCH_SIZE,
+    testloader = torch.utils.data.DataLoader(testset, batch_size=BATCH_SIZE,drop_last=True,
                                              shuffle=False, num_workers=2)
-
-    classes = ('plane', 'car', 'bird', 'cat',
-               'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
     print('Building model...')
     #net = Net().cuda()
     net = Net()
     net.train() # Why would I do this?
 
-    #criterion = nn.CrossEntropyLoss()
-    criterion = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([120]))
+    criterion = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([175]))
     optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
 
     print('Start training...')
-    for epoch in range(MAX_EPOCH):  # loop over the dataset multiple times
+    for epoch in range(MAX_EPOCH):  # Epoch looping 
 
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
@@ -132,7 +143,8 @@ if __name__ == "__main__":
             # wrap them in Variable
             #inputs, labels = Variable(inputs).cuda(), Variable(labels).cuda()
             inputs, labels = Variable(inputs), Variable(labels)
-            reInputs = inputs.reshape(BATCH_SIZE, 1, 16,16)
+            
+            reInputs = inputs.reshape(inputs.shape[0], 1, inputs.shape[1],inputs.shape[2])
             # zero the parameter gradients
             optimizer.zero_grad()
 
