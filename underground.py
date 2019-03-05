@@ -35,10 +35,23 @@ class Underground:
 			self._add_artifact_fidelity(artifact[0], artifact[1])
 		self._artifact_fidelity_map = np.multiply(self._artifact_fidelity_map, self._tunnel_map)
 
+	def _add_artifact_fidelity_2(self, artifact_x, artifact_y):
+		for y in range(self._y_dim):
+			for x in range(self._x_dim):
+				self._artifact_fidelity_map[y][x] += 5.0/(np.sqrt((y - artifact_y)**2 + (x - artifact_x)**2) + 1)
+				if x == artifact_x and y == artifact_y:
+					self._artifact_fidelity_map[y][x] += 5
+				elif np.sqrt((y - artifact_y)**2 + (x - artifact_x)**2) <= 1:
+					# print("Square Root Term", np.sqrt((y - artifact_y)**2 + (x - artifact_x)**2))
+					# print("artifact x y", artifact_x, artifact_y)
+					# print('x y', x, y)
+					self._artifact_fidelity_map += 0.5
+
 	def _add_artifact_fidelity(self, artifact_x, artifact_y):
 		for y in range(self._y_dim):
 			for x in range(self._x_dim):
-				self._artifact_fidelity_map[y][x] += 1.0/(np.sqrt((y - artifact_y)**2 + (x - artifact_x)**2) + 1)
+				# self._artifact_fidelity_map[y][x] += (self._x_dim + self._y_dim) - (np.sqrt((y - artifact_y)**2 + (x - artifact_x)**2) + 1)
+				self._artifact_fidelity_map[y][x] += 5.0/(np.sqrt((y - artifact_y)**2 + (x - artifact_x)**2) + 1)
 
 	def _check_state_in_tunnel(self, state):
 		# state = (x, y)
@@ -61,7 +74,7 @@ class Underground:
 		if self._updated_artifact_locations.count(state):
 			self._updated_artifact_locations.remove(state)
 			self._update_artifact_fidelity_map()
-			print('Artifact found at: {}'.format(state))
+			# print('Artifact found at: {}'.format(state))
 			return True
 		else:
 			return False

@@ -47,10 +47,10 @@ class Robot:
 			return "up"
 		else:
 			# This breaks if there are no valid actions
-			print("Allowed actions", allowed_actions)
-			print("Robot position", self._current_position)
-			print("Goal:", goal)
-			print("SOMETHING HAS GONE TERRIBLY WRONG")
+			# print("Allowed actions", allowed_actions)
+			# print("Robot position", self._current_position)
+			# print("Goal:", goal)
+			# print("SOMETHING HAS GONE TERRIBLY WRONG")
 			return False
 
 	def _give_action(self, action):
@@ -74,20 +74,23 @@ class Robot:
 	# Frontier map keeps track of areas that have been observed but not explored
 	def update_observed_map(self, observation, radius):
 		state = self._get_current_location()
+		tunnel_grid_size = self._tunnel_grid.shape
 		for y in range(radius * 2 + 1):
 			# y coordinate of state in loop
 			state_y = state[1] + y - radius
 
 			# If out of bounds, continue to next loop
-			if state_y < 0 or state_y > 11:
+			if state_y < 0 or state_y >= tunnel_grid_size[1]:
 				continue
 
 			for x in range(radius * 2 + 1):
 				# Similar logic for x coordinate
 				state_x = state[0] + x - radius
-				if state_x < 0 or state_x > 23:
+				if state_x < 0 or state_x >= tunnel_grid_size[0]:
 					continue
 
+				# print("Observed Map", self._observed_map.shape)
+				# print("State x, state y", state_x, state_y)
 				self._observed_map[state_x][state_y] = observation[x][y]
 				# If the robot has not yet explored that area, add it to the observation map and frontiers map
 				if self._explored_map[state_x][state_y] == 0:
@@ -100,5 +103,7 @@ class Robot:
 	def _update_reward(self, found_artifact):
 		if found_artifact:
 			self._reward += 100
+			return True
 		else:
-			self._reward -=1
+			self._reward -= 1
+			return False
