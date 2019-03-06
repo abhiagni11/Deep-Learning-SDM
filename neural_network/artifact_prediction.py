@@ -24,7 +24,7 @@ import numpy as np
 import pickle 
 
 
-GRID_SIZE = 24
+GRID_SIZE = 16
 
 
 class Net(nn.Module):
@@ -119,7 +119,7 @@ if __name__ == "__main__":
     ########################################################
     
     BATCH_SIZE = 12 #mini_batch size
-    MAX_EPOCH = 50 #maximum epoch to train
+    MAX_EPOCH = 20 #maximum epoch to train
     thres_prob = 0.7 
     positive_weight = 100
     learning_rate = 0.01

@@ -16,6 +16,8 @@ from frontier2 import Frontier
 import numpy as np
 
 
+GRID_SIZE = 16
+
 def shutdown():
 	print('\nGoodbye')
 
@@ -31,7 +33,7 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 	# atexit.register(shutdown)
 
 	# Instantiate the environment
-	tunnel = Underground(TUNNEL_FILE, ARTIFACT_FILE)
+	tunnel = Underground(GRID_SIZE, TUNNEL_FILE, ARTIFACT_FILE)
 	# print("Number of artifacts", len(tunnel._updated_artifact_locations))
 	x_dim, y_dim = tunnel._x_dim, tunnel._y_dim
 
@@ -54,7 +56,7 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 	if visualize:
 		# To visualize
 		graph = Visualize(TUNNEL_FILE)
-		graph._initialise_visualization(tunnel._get_artifact_locations())
+		graph._initialise_visualization(tunnel._get_predicted_artifact_locations())
 
 	# Set current state
 	state = wall_e._get_current_location()
@@ -70,11 +72,12 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 			# Get matrix of observed frontier values around wall-e and update observed map
 			observation = tunnel._get_observation(state)
 			wall_e.update_observed_map(observation, tunnel._observation_radius)
-			print("artifacts: {}".format(len(tunnel._updated_artifact_locations)))
+			# print("real artifacts\t: {}".format(len(tunnel._updated_artifact_locations)))
+			# print("predicted artifacts\t:{}".format(len(tunnel._updated_predicted_artifact_locations)))
 
 			if visualize:
 				# Update visualization
-				graph._keep_visualizing(state, tunnel._get_artifact_locations(), observation, wall_e._get_explored_map(), tunnel._get_artifact_fidelity_map())
+				graph._keep_visualizing(state, tunnel._get_artifact_locations(), observation, wall_e._get_explored_map(), tunnel._get_predicted_artifact_fidelity_map())
 
 			# Pick the next frontier and get a path to that point
 			path = frontier.get_next_frontier(state, wall_e._observed_map, wall_e._frontiers, value_dist)
@@ -106,7 +109,7 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 
 					if visualize:
 						graph._keep_visualizing(state, tunnel._get_artifact_locations(), observation,
-												wall_e._get_explored_map(), tunnel._get_artifact_fidelity_map())
+												wall_e._get_explored_map(), tunnel._get_predicted_artifact_fidelity_map())
 
 					# Update the distance to the next point
 					distance = abs(wall_e._get_current_location()[0] - point[0]) + abs(wall_e._get_current_location()[1] - point[1])
@@ -123,12 +126,12 @@ if __name__ == "__main__":
 
 	tunnel_num = 2
 	value_dist = 'sqrt'
-	TUNNEL_FILE = './maps/tunnel_{}.npy'.format(tunnel_num)
-	ARTIFACT_FILE = './maps/artifacts_{}.npy'.format(tunnel_num)
+	TUNNEL_FILE = './maps_{}/tunnel_{}.npy'.format(GRID_SIZE, tunnel_num)
+	ARTIFACT_FILE = './maps_{}/artifacts_{}.npy'.format(GRID_SIZE, tunnel_num)
 
 	try:
 		print('Started exploring\n')
-		steps, reward, score_list, points_found = main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, False)
+		steps, reward, score_list, points_found = main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, True)
 		print("Tunnel {}".format(tunnel_num))
 		print("Steps", steps)
 		print("Reward", reward)
