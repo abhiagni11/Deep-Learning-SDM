@@ -86,24 +86,27 @@ def eval_net(dataloader, thres_prob):
         total_loss += loss.data.item()
     print(' ')
     
-    #Display the output of the CNN 
+    #Display the input of the CNN 
     viz_images = torch.Tensor(images)
     grid_ = viz_images.detach()
+    grid_ = grid_[0][0]
     outgrid = torchvision.utils.make_grid(grid_,nrow=6)
-    #plt.imshow(outgrid.permute(1,2,0))
-    #plt.pause(0.0000001)
+    # plt.imshow(outgrid.permute(1,2,0))
+    # plt.pause(0.0000001)
     
     #Display the output of the CNN 
     viz_outputs = torch.Tensor(outputs)
     grid_ = viz_outputs.reshape(images.shape).detach()
+    grid_ = grid_[0][0]
     outgrid = torchvision.utils.make_grid(grid_,nrow=6)
-    #plt.imshow(outgrid.permute(1,2,0))
-    #plt.pause(0.0000001)
+    plt.imshow(outgrid.permute(1,2,0))
+    plt.pause(0.0000001)
     
     #Display the labels
     viz_labels = torch.Tensor(labels)
     grid_ = viz_labels.reshape(images.shape).detach()
     outgrid = torchvision.utils.make_grid(grid_,nrow=6)
+    grid_ = grid_[0][0]
     #plt.imshow(outgrid.permute(1,2,0))
     #plt.pause(0.0000001)
 
@@ -200,12 +203,12 @@ if __name__ == "__main__":
         print("mean loss", mean_, std_)
         test_mean.append(mean_)
         test_std.append(std_)
-        plt.errorbar(range(epoch+1), test_mean, test_std)
-        plt.xlabel("NUMBER OF EPOCH")
-        plt.ylabel("Binary Cross Entropy Loss")
-        plt.pause(0.00001)
+        # plt.errorbar(range(epoch+1), test_mean, test_std)
+        # plt.xlabel("NUMBER OF EPOCH")
+        # plt.ylabel("Binary Cross Entropy Loss")
+        # plt.pause(0.00001)
         print('EPOCH: %d train_loss: %.5f train_acc: %.5f test_loss: %.5f test_acc %.5f' %
               (epoch+1, train_loss, train_acc, test_loss, test_acc))
     print('Finished Training')
     print('Saving model...')
-    torch.save(net.state_dict(), 'mytraining_{}.pth'.format(GRID_SIZE))
+    torch.save(net.state_dict(), 'mytraining_{}_epoch{}_batch{}.pth'.format(GRID_SIZE, EPOCH, BATCH_SIZE))
