@@ -23,6 +23,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pickle 
 
+
+GRID_SIZE = 24
+
+
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
@@ -31,7 +35,7 @@ class Net(nn.Module):
         self.conv3 = nn.Conv2d(32, 64, 3, padding=1)
         self.conv4 = nn.Conv2d(64, 64, 3, padding=1)
         self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(64 * 4 * 4, 16*16)
+        self.fc1 = nn.Linear(64 * (GRID_SIZE//4) * (GRID_SIZE//4), GRID_SIZE*GRID_SIZE)
         self.fc2 = nn.Linear(512, 10)
 
     def forward(self, x):
@@ -114,17 +118,16 @@ if __name__ == "__main__":
     ########## PARAMETERS ##################################
     ########################################################
     
-    BATCH_SIZE = 12 #mini_batch size
-    MAX_EPOCH = 15 #maximum epoch to train
+    BATCH_SIZE = 40 #mini_batch size
+    MAX_EPOCH = 100 #maximum epoch to train
     thres_prob = 0.7 
     positive_weight = 100
     learning_rate = 0.01
     network_momentum = 0.9
-    
-    
+
     
     # load data 
-    with open('../synthetic_data/synthetic_dataset.pickle', 'rb') as handle:
+    with open('../synthetic_data/synthetic_dataset_{}.pickle'.format(GRID_SIZE), 'rb') as handle:
         data = pickle.load(handle)
         
     #loss_plot = plt.figure()
@@ -205,4 +208,4 @@ if __name__ == "__main__":
               (epoch+1, train_loss, train_acc, test_loss, test_acc))
     print('Finished Training')
     print('Saving model...')
-    torch.save(net.state_dict(), 'mytraining.pth')
+    torch.save(net.state_dict(), 'mytraining_{}.pth'.format(GRID_SIZE))
