@@ -11,7 +11,7 @@ import numpy as np
 import heapq
 import random
 
-GRID_SIZE = 24 
+GRID_SIZE = 16
 
 
 class PriorityQueue:
@@ -288,9 +288,9 @@ data["testing_data"] = []
 data["testing_labels"] = []
 
 gridDimension = [GRID_SIZE, GRID_SIZE]
-numPOI = 20
+numPOI = 15
 trainRatio = 0.9
-totalData = 100000
+totalData = 10000
 
 for i in range(int(trainRatio * totalData)):
     m, n = getTiles(gridDimension,numPOI)

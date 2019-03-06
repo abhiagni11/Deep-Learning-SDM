@@ -118,8 +118,8 @@ if __name__ == "__main__":
     ########## PARAMETERS ##################################
     ########################################################
     
-    BATCH_SIZE = 40 #mini_batch size
-    MAX_EPOCH = 100 #maximum epoch to train
+    BATCH_SIZE = 12 #mini_batch size
+    MAX_EPOCH = 50 #maximum epoch to train
     thres_prob = 0.7 
     positive_weight = 100
     learning_rate = 0.01
