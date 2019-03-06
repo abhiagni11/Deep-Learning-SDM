@@ -86,6 +86,7 @@ class Robot:
 			for x in range(radius * 2 + 1):
 				# Similar logic for x coordinate
 				state_x = state[0] + x - radius
+
 				if state_x < 0 or state_x >= tunnel_grid_size[0]:
 					continue
 

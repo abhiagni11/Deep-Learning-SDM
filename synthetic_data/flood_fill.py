@@ -11,6 +11,9 @@ import numpy as np
 import heapq
 import random
 
+GRID_SIZE = 16
+
+
 class PriorityQueue:
     def __init__(self):
         self.elements = []
@@ -284,8 +287,8 @@ data["training_labels"] = []
 data["testing_data"] = []
 data["testing_labels"] = []
 
-gridDimension = [16, 16]
-numPOI = 9
+gridDimension = [GRID_SIZE, GRID_SIZE]
+numPOI = 15
 trainRatio = 0.9
 totalData = 10000
 
@@ -319,7 +322,7 @@ for i in range(int((1 - trainRatio) * totalData +1)):
 print('') 
 
 
-with open('synthetic_dataset.pickle', 'wb') as handle:
+with open('synthetic_dataset_{}.pickle'.format(GRID_SIZE), 'wb') as handle:
     pickle.dump(data, handle)
 
 #with open('synthetic_dataset.pickle', 'rb') as handle:

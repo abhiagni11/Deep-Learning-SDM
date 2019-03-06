@@ -28,7 +28,7 @@ def tick(tunnel, wall_e, action):
 
 
 def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
-	atexit.register(shutdown)
+	# atexit.register(shutdown)
 
 	# Instantiate the environment
 	tunnel = Underground(TUNNEL_FILE, ARTIFACT_FILE)
@@ -115,7 +115,6 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 
 	except ValueError:
 		print("Wall-e has not captured all POIs, but has run out of frontiers")
-
 	return steps, wall_e._reward, score_list, points_found
 
 
@@ -128,7 +127,7 @@ if __name__ == "__main__":
 
 	try:
 		print('Started exploring\n')
-		steps, reward, score_list, points_found = main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, True)
+		steps, reward, score_list, points_found = main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, False)
 		print("Tunnel {}".format(tunnel_num))
 		print("Steps", steps)
 		print("Reward", reward)
