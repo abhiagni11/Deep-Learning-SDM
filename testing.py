@@ -122,7 +122,7 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 if __name__ == "__main__":
 
 	tunnel_num = 3
-	value_dist = 'value'
+	value_dist = 'normal'
 	TUNNEL_FILE = './maps/tunnel_{}.npy'.format(tunnel_num)
 	ARTIFACT_FILE = './maps/artifacts_{}.npy'.format(tunnel_num)
 
