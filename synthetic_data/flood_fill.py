@@ -284,8 +284,8 @@ data["training_labels"] = []
 data["testing_data"] = []
 data["testing_labels"] = []
 
-gridDimension = [16, 16]
-numPOI = 9
+gridDimension = [24, 24]
+numPOI = 20
 trainRatio = 0.9
 totalData = 10000
 
