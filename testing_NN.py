@@ -68,7 +68,7 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 	# Runs until Wall-e runs out of budget or there are no frontiers left to explore
 	try:
 		while steps < budget and len(tunnel._updated_artifact_locations) > 0:
-			# ii = input("dsd")
+			# rest_halt = input("enter input")
 			# Get matrix of observed frontier values around wall-e and update observed map
 			observation = tunnel._get_observation(state)
 			wall_e.update_observed_map(observation, tunnel._observation_radius)
