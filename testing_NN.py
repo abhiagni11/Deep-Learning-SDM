@@ -65,6 +65,7 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 	observation = tunnel._get_observation(state)
 	wall_e.update_observed_map(observation, tunnel._observation_radius)
 
+	
 	# Runs until Wall-e runs out of budget or there are no frontiers left to explore
 	try:
 		while steps < budget and len(tunnel._updated_artifact_locations) > 0:
@@ -124,8 +125,9 @@ def main(value_dist, TUNNEL_FILE, ARTIFACT_FILE, visualize=True):
 
 if __name__ == "__main__":
 
-	tunnel_num = 44	
-	value_dist = 'sqrt'
+	tunnel_num = 30
+	# available value functions: 'value', 'quarter', 'closest', 'sqrt', 'normal'
+	value_dist = 'closest'
 	TUNNEL_FILE = './maps_{}/tunnel_{}.npy'.format(GRID_SIZE, tunnel_num)
 	ARTIFACT_FILE = './maps_{}/artifacts_{}.npy'.format(GRID_SIZE, tunnel_num)
 
