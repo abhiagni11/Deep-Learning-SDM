@@ -89,26 +89,27 @@ def eval_net(dataloader, thres_prob):
     #Display the input of the CNN 
     viz_images = torch.Tensor(images)
     grid_ = viz_images.detach()
-    grid_ = grid_[0][0]
-    outgrid = torchvision.utils.make_grid(grid_,nrow=6)
-    # plt.imshow(outgrid.permute(1,2,0))
-    # plt.pause(0.0000001)
+    grid_ = grid_[0:4]
+    outgrid = torchvision.utils.make_grid(grid_,nrow=2)
+    #plt.imshow(outgrid.permute(1,2,0))
+    #plt.pause(0.0000001)
     
     #Display the output of the CNN 
     viz_outputs = torch.Tensor(outputs)
     grid_ = viz_outputs.reshape(images.shape).detach()
-    grid_ = grid_[0][0]
-    outgrid = torchvision.utils.make_grid(grid_,nrow=6)
-    plt.imshow(outgrid.permute(1,2,0))
-    plt.pause(0.0000001)
+    grid_ = grid_[0:4]
+    outgrid = torchvision.utils.make_grid(grid_,nrow=2)
+    #plt.imshow(outgrid.permute(1,2,0))
+    #plt.pause(0.0000001)
     
     #Display the labels
     viz_labels = torch.Tensor(labels)
     grid_ = viz_labels.reshape(images.shape).detach()
-    outgrid = torchvision.utils.make_grid(grid_,nrow=6)
-    grid_ = grid_[0][0]
-    #plt.imshow(outgrid.permute(1,2,0))
-    #plt.pause(0.0000001)
+    grid_ = grid_[0:4]
+    outgrid = torchvision.utils.make_grid(grid_,nrow=2)
+
+    plt.imshow(outgrid.permute(1,2,0))
+    plt.pause(0.0000001)
 
     mean_ = np.mean(loss_list)
     std_ = np.std(loss_list)
@@ -126,7 +127,7 @@ if __name__ == "__main__":
     thres_prob = 0.7 
     positive_weight = 100
     learning_rate = 0.01
-    network_momentum = 0.9
+    network_momentum = 0.9 
 
     
     # load data 
@@ -198,7 +199,7 @@ if __name__ == "__main__":
                       (i + 1, running_loss / 500))
                 running_loss = 0.0
         print('    Finish training this EPOCH, start evaluating...')
-        train_loss, train_acc, mean_, std_ = eval_net(trainloader, thres_prob)
+        #train_loss, train_acc, mean_, std_ = eval_net(trainloader, thres_prob)
         test_loss, test_acc , mean_, std_ = eval_net(testloader, thres_prob)
         print("mean loss", mean_, std_)
         test_mean.append(mean_)
