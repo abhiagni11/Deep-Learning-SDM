@@ -128,7 +128,7 @@ if __name__ == "__main__":
     BATCH_SIZE = 128 #mini_batch size
     MAX_EPOCH = 300 #maximum epoch to train
     thres_prob = 0.5 
-    positive_weight = 100
+    positive_weight = 165
     learning_rate = 0.01
     network_momentum = 0.95 
 
@@ -167,7 +167,12 @@ if __name__ == "__main__":
     net.train() # Why would I do this?
 
     criterion = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([positive_weight])).cuda()
-    optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=network_momentum, weight_decay=0.005)
+    #optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=network_momentum, weight_decay=0.005)
+    optimizer = optim.SGD(net.parameters(), lr=learning_rate, weight_decay=0.005)
+    
+    # adaptive learning rate 
+    #lambda1 = lambda epoch_: 0.97 ** epoch_
+    #scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda1)
     
     # visualization
     test_mean = []
@@ -177,7 +182,7 @@ if __name__ == "__main__":
     
     print('Start training...')
     for epoch in range(MAX_EPOCH):  # Epoch looping 
-
+        #scheduler.step()
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
             # get the inputs
