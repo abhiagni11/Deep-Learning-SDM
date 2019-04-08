@@ -13,7 +13,7 @@ def shutdown():
 
 if __name__ == "__main__":
 
-    grid_size = 16 # 16
+    grid_size = 24 # 16
     num_tunnel_files = 100
     value_distance = ['value', 'quarter', 'closest', 'sqrt', 'normal']
     visualize = False

@@ -113,7 +113,7 @@ def nearestNeighbor(center, pts): #, forbidden):
     distance = np.array(distance)
     print(distance)
     indices = distance.argsort()[:2]
-    print indices
+    #print indices
     nearestPoints.append(pts[indices[0]])
     if random.uniform(0,1) > 0.8 and len(indices)>=2:
         nearestPoints.append(pts[indices[1]])
@@ -270,7 +270,7 @@ def getTiles(gridDimension, numPOI, i=0):
 
     return tiles, path_viz
 
-GRID_SIZE = 16
+GRID_SIZE = 24
 NUMBER_OF_DATA_POINTS = 100
 
 gridDimension = [GRID_SIZE, GRID_SIZE]
