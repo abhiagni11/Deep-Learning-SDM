@@ -45,7 +45,7 @@ def a_star_search(grid, start, goal):
         for d in dirs_motion:
             x, y = d(current[0], current[1])
             # check for bounds
-            if 0 <= x < len(grid) and 0 <= y < len(grid[0]):
+            if 0 <= x < len(grid) and 0 <= y < len(grid[0]):  # and grid[x,y]>0:
                 next = (x,y)
                 # making all travel as cost 1
                 new_cost = cost_so_far[current] + 1
@@ -67,6 +67,9 @@ def getPath(grid, start, goal):
     while pointer != start:
         path.append(came_from_[pointer])
         pointer = came_from_[pointer]
+    # print("grid", grid)
+    # print("path", path)
+    # print("start:",start," goal:",goal)
     return path
 
 # create random points of interests.
@@ -83,7 +86,7 @@ def connectGrid(pts, grid):
     for i in range(len(pts)):
         for j in range(i+1, len(pts)):
             path = getPath(np.zeros((len(grid), len(grid[0]))), pts[i], pts[j])
-            print("astarpath",path)
+            # print("astarpath",path)
             for k in path:
                 grid[k[0], k[1]] = 1
 
@@ -107,9 +110,9 @@ def nearestNeighbor(center, pts): #, forbidden):
         distance.append(manhattanDist(i, center))
     nearestPoints = []
     distance = np.array(distance)
-    print(distance)
+    # print(distance)
     indices = distance.argsort()[:2]
-    print(indices)
+    # print(indices)
     nearestPoints.append(pts[indices[0]])
     if random.uniform(0,1) > 0.8 and len(indices)>=2:
         nearestPoints.append(pts[indices[1]])
@@ -146,7 +149,7 @@ def getTiles(gridDimension, numPOI):
 
     points = createPOI(numPOI, gridDimension)
 
-    print("points", points)
+    # print("points", points)
     entrance_point = [0, int(gridDimension[1]/2)]
 
     # Connecting Entrance to the nearest point of interest
@@ -169,7 +172,7 @@ def getTiles(gridDimension, numPOI):
 
             # Connect with the entrance
             if entrance_point[0] == x and entrance_point[1] == y:
-                print("equating entrance", entrance_point, x, y)
+                # print("equating entrance", entrance_point, x, y)
                 dir_vector[0] = 1
 
             # check whether the current point needs a tile.
@@ -255,15 +258,15 @@ def getTiles(gridDimension, numPOI):
                     tiles[x,y] = 16  # 16 is the code for turn with yaw pi.
 
 
-    print(path_viz)
-    print(tiles)
-    plt.imshow(path_viz)
-    plt.ylabel('x')
-    plt.xlabel('y')
-    plt.show()
+    # print(path_viz)
+    # print(tiles)
+    # plt.imshow(path_viz)
+    # plt.ylabel('x')
+    # plt.xlabel('y')
+    # plt.show()
     return tiles
 
-gridDimension = [15, 15]
-numPOI = 12
+gridDimension = [16, 16]
+numPOI = 9
 t = getTiles(gridDimension,numPOI)
-print(t)
+#print(t)
