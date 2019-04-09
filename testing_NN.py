@@ -16,7 +16,7 @@ from frontier2 import Frontier
 import numpy as np
 
 
-GRID_SIZE = 16
+GRID_SIZE = 24
 
 def shutdown():
 	print('\nGoodbye')

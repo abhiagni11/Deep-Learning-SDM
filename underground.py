@@ -9,7 +9,7 @@ Author: Abhijeet Agnihotri
 
 import torch
 import numpy as np
-from neural_network.artifact_prediction import Net
+from neural_network.artifact_prediction_cuda import Net
 
 
 class Underground:
@@ -38,8 +38,10 @@ class Underground:
 		image = torch.Tensor(image)
 		image = image.reshape(1, 1, image.shape[0],image.shape[1])
 		model = Net()
-		model.load_state_dict(torch.load('neural_network/mytraining_{}.pth'.format(self._grid_size)))    
+		model.load_state_dict(torch.load('neural_network/mytraining_{}.pth'.format(self._grid_size)))
+		model.eval()
 		outputs = model(image)
+		a=2
 		outputs = outputs.reshape(self._grid_size, self._grid_size).detach().numpy()
 		outputs = 1.0/(1.0 + np.exp(-outputs))
 		self._predicted_artifact_locations = []
@@ -69,7 +71,7 @@ class Underground:
 		for artifact in self._updated_artifact_locations:
 			self._add_artifact_fidelity(artifact[0], artifact[1])
 		self._artifact_fidelity_map = np.multiply(self._artifact_fidelity_map, self._tunnel_map)
-	
+
 	def _update_predicted_artifact_fidelity_map(self):
 		self._predicted_artifact_fidelity_map = np.zeros_like(self._tunnel_map)
 

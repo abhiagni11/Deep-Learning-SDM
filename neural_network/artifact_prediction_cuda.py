@@ -5,7 +5,7 @@ Created on Tue Feb 26 21:10:46 2019
 
 This network predicts artifact location on tunnel maps
 
-@author: Manish Saroya 
+@author: Manish Saroya
 Contact: saroyam@oregonstate.edu
 
 """
@@ -21,10 +21,10 @@ import torchvision.transforms as transforms
 import torch.optim as optim
 import matplotlib.pyplot as plt
 import numpy as np
-import pickle 
+import pickle
 
 
-GRID_SIZE = 32
+GRID_SIZE = 16
 
 
 class Net(nn.Module):
@@ -77,7 +77,7 @@ def eval_net(dataloader, thres_prob):
         wrong += (clipped_outputs!=(flat_labels>0.5)).sum()
 
         artifacts = (flat_labels>0.5).sum()
-        artifacts_found = (clipped_outputs & (flat_labels>0.5)).sum() 
+        artifacts_found = (clipped_outputs & (flat_labels>0.5)).sum()
         print('\r[wrong {} of {}, artifacts {}, found {}]'.format((clipped_outputs!=(flat_labels>0.5)).sum(), \
               len(flat_labels.reshape(1,-1)[0]), \
               (flat_labels>0.5).sum(), artifacts_found),  end='',)
@@ -86,23 +86,23 @@ def eval_net(dataloader, thres_prob):
         loss_list.append(loss.data.item())
         total_loss += loss.data.item()
     print(' ')
-    
-    #Display the input of the CNN 
+
+    #Display the input of the CNN
     viz_images = images
     grid_ = viz_images.detach()
     grid_ = grid_[0:4]
     outgrid = torchvision.utils.make_grid(grid_,nrow=2)
     plt.imshow(torch.Tensor.cpu(outgrid.permute(1,2,0)))
     plt.pause(0.0000001)
-    
-    #Display the output of the CNN 
+
+    #Display the output of the CNN
     viz_outputs = outputs
     grid_ = viz_outputs.reshape(images.shape).detach()
     grid_ = grid_[0:4]
     outgrid = torchvision.utils.make_grid(grid_,nrow=2)
     plt.imshow(torch.Tensor.cpu(outgrid.permute(1,2,0)))
     plt.pause(0.0000001)
-    
+
     #Display the labels
     viz_labels = labels
     grid_ = viz_labels.reshape(images.shape).detach()
@@ -114,41 +114,41 @@ def eval_net(dataloader, thres_prob):
 
     mean_ = np.mean(loss_list)
     std_ = np.std(loss_list)
-    
+
     net.train() # Why would I do this?            #inputs, labels = Variable(inputs).cuda(), Variable(labels).cuda()
 
     return total_loss / total, wrong.item() / total, mean_, std_
 
 if __name__ == "__main__":
-    
+
     ########################################################
     ########## PARAMETERS ##################################
     ########################################################
-    
+
     BATCH_SIZE = 128 #mini_batch size
     MAX_EPOCH = 300 #maximum epoch to train
-    thres_prob = 0.5 
-    positive_weight = 165
+    thres_prob = 0.5
+    positive_weight = 100
     learning_rate = 0.01
-    network_momentum = 0.95 
+    network_momentum = 0.95
 
-    
-    # load data 
+
+    # load data
     with open('../synthetic_data/synthetic_dataset_{}.pickle'.format(GRID_SIZE), 'rb') as handle:
         data = pickle.load(handle)
-        
+
     #loss_plot = plt.figure()
     #cnn_output_plot = plt.figure()
     #labels_plot = plt.figure()
     #transform = transforms.Compose(
     #    [transforms.ToTensor(),
     #     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]) #torchvision.transforms.Normalize(mean, std)
-    
+
     # SKIPPED NORMALIZATION
     #Preparing Training Data
     tensor_training_data = torch.stack([torch.Tensor(s) for s in data["training_data"]])
     tensor_training_labels = torch.stack([torch.Tensor(s) for s in data["training_labels"]])
-    
+
     trainset = torch.utils.data.TensorDataset(tensor_training_data, tensor_training_labels)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=BATCH_SIZE, drop_last=True,
                                               shuffle=True, num_workers=2)
@@ -156,7 +156,7 @@ if __name__ == "__main__":
     #Preparing Testing Data
     tensor_testing_data = torch.stack([torch.Tensor(s) for s in data["testing_data"]])
     tensor_testing_labels = torch.stack([torch.Tensor(s) for s in data["testing_labels"]])
-    
+
     testset = torch.utils.data.TensorDataset(tensor_testing_data, tensor_testing_labels)
     testloader = torch.utils.data.DataLoader(testset, batch_size=BATCH_SIZE, drop_last=True,
                                              shuffle=False, num_workers=2)
@@ -167,22 +167,15 @@ if __name__ == "__main__":
     net.train() # Why would I do this?
 
     criterion = nn.BCEWithLogitsLoss(pos_weight=torch.Tensor([positive_weight])).cuda()
-    #optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=network_momentum, weight_decay=0.005)
-    optimizer = optim.SGD(net.parameters(), lr=learning_rate, weight_decay=0.005)
-    
-    # adaptive learning rate 
-    #lambda1 = lambda epoch_: 0.97 ** epoch_
-    #scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda1)
-    
+    optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=network_momentum, weight_decay=0.005)
     # visualization
     test_mean = []
     test_std = []
     train_loss_list = []
     test_loss_list = []
-    
+
     print('Start training...')
-    for epoch in range(MAX_EPOCH):  # Epoch looping 
-        #scheduler.step()
+    for epoch in range(MAX_EPOCH):  # Epoch looping
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
             # get the inputs
@@ -191,7 +184,7 @@ if __name__ == "__main__":
             # wrap them in Variable
             inputs, labels = Variable(inputs).cuda(), Variable(labels).cuda()
             #inputs, labels = Variable(inputs), Variable(labels)
-            
+
             reInputs = inputs.reshape(inputs.shape[0], 1, inputs.shape[1],inputs.shape[2])
             # zero the parameter gradients
             optimizer.zero_grad()
@@ -199,7 +192,7 @@ if __name__ == "__main__":
             # forward + backward + optimize
             outputs = net(reInputs)
             flat_labels = labels.view(-1, net.num_flat_features(labels))
-            weights = 120* flat_labels + 1 
+            weights = 120* flat_labels + 1
             loss = criterion(outputs, flat_labels)
             loss.backward()
             optimizer.step()
@@ -212,16 +205,16 @@ if __name__ == "__main__":
         print('    Finish training this EPOCH, start evaluating...')
         train_loss, train_acc, mean_, std_ = eval_net(trainloader, thres_prob)
         test_loss, test_acc , mean_, std_ = eval_net(testloader, thres_prob)
-        
+
         train_loss_list.append(train_loss)
         test_loss_list.append(test_loss)
 
         print("mean loss", mean_, std_)
         test_mean.append(mean_)
         test_std.append(std_)
-        
+
         ########################
-        # PLOTTING 
+        # PLOTTING
         plt.plot(range(epoch+1), train_loss_list, label='Train_Loss',color='darkorange')
         plt.plot(range(epoch+1), test_loss_list, label='Test_Loss', color='deepskyblue')
         plt.xlabel("No. of Episodes")
@@ -229,7 +222,7 @@ if __name__ == "__main__":
         plt.legend(loc="lower left")
         plt.title("Losses With SGD")
         plt.savefig("loss_fig")
-        
+
         ########################
         #plt.errorbar(range(epoch+1), test_mean, test_std)
         # plotting per pixel loss
@@ -241,4 +234,4 @@ if __name__ == "__main__":
               (epoch+1, train_loss, train_acc, test_loss, test_acc))
     print('Finished Training')
     print('Saving model...')
-    torch.save(net.state_dict(), 'mytraining_{}_epoch{}_batch{}.pth'.format(GRID_SIZE, MAX_EPOCH, BATCH_SIZE))
+    torch.save(net.state_dict(), 'mytraining_final{}_epoch{}_batch{}.pth'.format(GRID_SIZE, MAX_EPOCH, BATCH_SIZE))
