@@ -7,36 +7,70 @@ Created on Mon Apr  8 22:32:42 2019
 """
 
 from flood_fill import getTiles
+import numpy as np
+import matplotlib.pyplot as plt
 
 class Exploration:
 	"""Filters X% exploration map form completely known map 
 	   with appropriate flood fill based masking"""
 	      
-	def __init__(self, gridSize, numPOI, percentFilter):
+	def __init__(self, gridSize, numPOI, filterRatio):
 		self.gridSize = gridSize
 		self.gridDimension = [self.gridSize, self.gridSize]
 		self.numPOI = numPOI
-		self.percentFilter = percentFilter
+		self.filterRatio = filterRatio
 		self.occupancy_map = None
 	
 	def generate_map(self):
 		feature_map, self.occupancy_map = getTiles(self.gridDimension, self.numPOI)
-		print(self.occupancy_map)
+		plt.imshow(self.occupancy_map)
+		plt.pause(0.0001)
+		#print(self.occupancy_map)
 	
-	def nbrs(self, point):
-		pass
+	def frontier(self, point, exploredMap):
+		dirs_motion = [
+		    lambda x, y: (x-1, y),  # up
+		    lambda x, y: (x+1, y),  # down
+		    lambda x, y: (x, y - 1),  # left
+		    lambda x, y: (x, y + 1),  # right
+		]
+		frontierVector = []
+		for d in dirs_motion:
+			nx, ny = d(point[0], point[1])
+			if 0 <= nx < len(self.occupancy_map) and 0 <= ny < len(self.occupancy_map[0]):
+				if self.occupancy_map[nx, ny] == 1 and exploredMap[nx, ny]==0:
+					exploredMap[nx, ny] = 1
+					frontierVector.append([nx, ny])
+		return frontierVector
 	
 	def flood_fill_filter(self):
 		# adapted from map generation procedure
 		startp = [0, int(self.gridDimension[1]/2)]
+		
+		exploredMap = np.zeros((self.gridDimension[0],self.gridDimension[1]))
+		exploredMap[startp[0],startp[1]] = 1
+		
 		latentPoints = []
 		latentPoints.append(startp)
+		
 		while(len(latentPoints)>0):
 			latent = latentPoints.pop(0)
+			frontierVector = self.frontier(latent,exploredMap)
+			latentPoints = latentPoints + frontierVector
+			if (np.sum(exploredMap) > self.filterRatio * np.sum(self.occupancy_map)):
+				for p in latentPoints:
+					exploredMap[p[0],p[1]] = 0.5
+				return exploredMap, latentPoints
+				  
 			
-		
-GRID_SIZE = 16
-numPOI = 9
+######### Exploration Parameters #############	
+GRID_SIZE = 32
+numPOI = 30
+filterRatio = 0.7
+##############################################
 
-explore = Exploration(GRID_SIZE, numPOI,0)
+explore = Exploration(GRID_SIZE, numPOI, filterRatio)
 explore.generate_map()
+map, frontierVector = explore.flood_fill_filter()
+print map
+plt.imshow(map)
