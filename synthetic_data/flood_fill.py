@@ -11,7 +11,7 @@ import numpy as np
 import heapq
 import random
 
-GRID_SIZE = 16
+#GRID_SIZE = 16
 
 
 class PriorityQueue:
@@ -219,7 +219,6 @@ def getTiles(gridDimension, numPOI):
                     tiles[x,y] = 24  # 10 is the code for Plus connection.
 
                 elif sum(dir_vector) == 1:
-                    #print("sum", sum(dir_vector))
                     if dir_vector[0] == 1:
                         tiles[x,y] = 31  # 10 is the code for Plus connection.
                     elif dir_vector[1] == 1:
@@ -273,60 +272,3 @@ def getTiles(gridDimension, numPOI):
     #plt.show()
     
     return tiles, path_viz
-
-#t = getTiles(gridDimension,numPOI)
-#print(t)
-
-
-## Data generation. Ideally this should be in a different file
-import sys 
-import pickle
-data = {}
-data["training_data"] = []
-data["training_labels"] = []
-data["testing_data"] = []
-data["testing_labels"] = []
-
-gridDimension = [GRID_SIZE, GRID_SIZE]
-numPOI = 15
-trainRatio = 0.9
-totalData = 10000
-
-for i in range(int(trainRatio * totalData)):
-    m, n = getTiles(gridDimension,numPOI)
-    data["training_data"].append(n)
-    test = np.logical_or.reduce((m==31,m==32,m==33,m==34))
-    data["training_labels"].append(test.astype(int))
-    print(
-    '\r[Generating Training Data {} of {}]'.format(
-        i,
-        int(trainRatio * totalData),
-    ),
-    end=''
-    )
-print('')
-
-for i in range(int((1 - trainRatio) * totalData +1)):
-    m, n = getTiles(gridDimension,numPOI)
-    data["testing_data"].append(n)
-    test = np.logical_or.reduce((m==31,m==32,m==33,m==34))
-    data["testing_labels"].append(test.astype(int))
-    #print("testing")
-    print(
-    '\r[Generating Testing Data {} of {}]'.format(
-        i,
-        int((1 - trainRatio) * totalData +1),
-    ),
-    end='',
-    )
-print('') 
-
-
-with open('synthetic_dataset_{}.pickle'.format(GRID_SIZE), 'wb') as handle:
-    pickle.dump(data, handle)
-
-#with open('synthetic_dataset.pickle', 'rb') as handle:
-#    b = pickle.load(handle)
-
-
-
