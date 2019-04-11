@@ -52,25 +52,26 @@ class Exploration:
 		
 		latentPoints = []
 		latentPoints.append(startp)
-		
+
 		while(len(latentPoints)>0):
 			latent = latentPoints.pop(0)
 			frontierVector = self.frontier(latent,exploredMap)
 			latentPoints = latentPoints + frontierVector
 			if (np.sum(exploredMap) > self.filterRatio * np.sum(self.occupancy_map)):
-				for p in latentPoints:
-					exploredMap[p[0],p[1]] = 0.5
 				return exploredMap, latentPoints
+		return exploredMap, latentPoints
 				  
 			
-######### Exploration Parameters #############	
-GRID_SIZE = 32
-numPOI = 30
-filterRatio = 0.7
-##############################################
-
-explore = Exploration(GRID_SIZE, numPOI, filterRatio)
-explore.generate_map()
-map, frontierVector = explore.flood_fill_filter()
-print map
-plt.imshow(map)
+########## Exploration Parameters #############	
+#GRID_SIZE = 32
+#numPOI = 20
+#filterRatio = 0.7
+###############################################
+#
+#explore = Exploration(GRID_SIZE, numPOI, filterRatio)
+#explore.generate_map()
+#map, frontierVector = explore.flood_fill_filter()
+#for p in frontierVector:
+#	map[p[0],p[1]] = 0.5
+#print map
+#plt.imshow(map)
