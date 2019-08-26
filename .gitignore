@@ -1,0 +1,5 @@
+# this extension are ignored by git
+*.png
+*.pth
+*.pickle
+*.pyc
