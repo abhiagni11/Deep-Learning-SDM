@@ -15,6 +15,17 @@ from neural_network.artifact_prediction_cuda import Net
 class Underground:
 
 	def __init__(self, grid_size, tunnel_filename, artifact_filename):
+
+		'''
+		FOR MANISH
+		Don't get confused with self._tunnel_map and self._artifact_locations
+		Both of these are initialized by loading the numpy files from your flood fill. 
+		Pay attention to the sketch I sent to you in WhatsApp, I had to change x to y and y to x...
+
+		Everything else (states and points) are denoted by [x, y] and are consistent to the sketch I sent you in WhatsApp. 
+		Take a look and let me know if that helps, I can talk more and clarify your doubts.
+
+		'''
 		# tunnel map is (y, x)
 		self._tunnel_map = np.load(tunnel_filename)
 		self._observation_radius = 1
